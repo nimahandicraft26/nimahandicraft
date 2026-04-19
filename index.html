@@ -1,1 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nima Handicraft</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <header class="bg-[#ea4747] text-white py-10 text-center">
+        <h1 id="site-name" class="text-4xl font-bold uppercase">Nima Handicraft</h1>
+        <p id="site-address" class="text-sm mt-2"></p>
+    </header>
 
+    <main class="max-w-6xl mx-auto py-10 px-4">
+        <div id="product-list" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            </div>
+    </main>
+
+    <script>
+        async function loadWebsite() {
+            // Load Settings
+            const settingsRes = await fetch('settings.json');
+            const settings = await settingsRes.json();
+            document.getElementById('site-name').innerText = settings.site_name;
+            document.getElementById('site-address').innerText = "📍 " + settings.address;
+
+            // Load Product (bag1.json)
+            const productRes = await fetch('content/products/bag1.json');
+            const product = await productRes.json();
+
+            const productList = document.getElementById('product-list');
+            productList.innerHTML = `
+                <div class="bg-white rounded-lg shadow-md overflow-hidden text-center p-4">
+                    <img src="${product.image1}" class="w-full h-72 object-cover rounded-md mb-4">
+                    <h2 class="text-xl font-bold">${product.title}</h2>
+                    <p class="text-[#ea4747] font-bold text-lg">${product.price}</p>
+                    <p class="text-gray-600 text-sm my-3">${product.description}</p>
+                    <a href="https://wa.me/${settings.whatsapp}?text=I want to buy ${product.title}" 
+                       class="bg-green-600 text-white px-6 py-2 rounded-full font-bold inline-block">
+                       Order on WhatsApp
+                    </a>
+                </div>
+            `;
+        }
+        loadWebsite();
+    </script>
+</body>
+</html>
