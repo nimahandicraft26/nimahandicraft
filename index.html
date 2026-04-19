@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nima Handicraft | Official</title>
+    <title>Nima Handicraft | Official Store</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -15,43 +15,31 @@
 </head>
 <body class="bg-gray-50 flex flex-col min-h-screen">
 
-    <header class="relative w-full h-28 md:h-40 flex flex-col items-center justify-center text-center overflow-hidden">
-        <img src="images/cover.jpeg" class="absolute inset-0 w-full h-full object-cover opacity-90" alt="Cover">
+    <header class="relative w-full h-32 md:h-44 flex flex-col items-center justify-center text-center overflow-hidden">
+        <img src="images/cover.jpeg" class="absolute inset-0 w-full h-full object-cover opacity-90" alt="Store Cover">
         <div class="relative z-10">
             <div class="bg-white p-1 rounded-full shadow-lg inline-block mb-1">
                 <img src="images/logo.jpeg" class="h-10 md:h-14 w-10 md:w-14 rounded-full object-cover">
             </div>
             <h1 class="text-white text-lg md:text-2xl font-black uppercase tracking-widest drop-shadow-md">Nima Handicraft</h1>
+            <p class="text-white text-[8px] md:text-[10px] uppercase tracking-[0.3em] font-bold opacity-80">Premium Collection</p>
         </div>
     </header>
 
-    <main class="flex-grow max-w-[1500px] mx-auto py-6 px-2 w-full">
-        <div class="border-b border-gray-200 mb-6 pb-2">
-            <h2 class="text-[10px] font-black uppercase tracking-[0.3em] text-gray-400">Our Premium Collection</h2>
+    <main class="flex-grow max-w-[1600px] mx-auto py-6 px-4 w-full">
+        <div class="border-b border-gray-200 mb-6 pb-2 flex justify-between items-center">
+            <h2 class="text-[10px] font-black uppercase tracking-[0.3em] text-gray-400">Our Collection</h2>
         </div>
 
-        <div id="product-list" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-            </div>
+        <div id="product-list" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            <p class="col-span-full text-center text-gray-400 py-10 uppercase text-[10px] font-bold tracking-widest">Loading Items...</p>
+        </div>
     </main>
 
-    <footer class="bg-white border-t py-6 text-center mt-auto">
-        <div id="f-details" class="flex flex-wrap justify-center gap-4 text-[9px] font-bold text-gray-400 uppercase tracking-tight"></div>
-        <p class="text-[8px] text-gray-200 mt-2 tracking-widest">© 2026 NIMA HANDICRAFT</p>
+    <footer class="bg-white border-t py-8 mt-auto">
+        <div id="f-details" class="flex flex-wrap justify-center gap-6 text-[9px] font-bold text-gray-400 uppercase tracking-tight"></div>
+        <p class="text-[8px] text-gray-200 mt-4 tracking-widest text-center">© 2026 NIMA HANDICRAFT | DUBAI, UAE</p>
     </footer>
-
-    <div id="cart-modal" class="fixed inset-0 bg-black/80 hidden z-[200] flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl w-full max-w-xs p-6 shadow-2xl">
-            <h3 class="font-black uppercase text-sm mb-4">Your Order</h3>
-            <div id="cart-items" class="space-y-2 mb-4 max-h-32 overflow-y-auto"></div>
-            <form action="https://formspree.io/f/mrerqqre" method="POST" class="space-y-2">
-                <input type="hidden" name="Order" id="hidden-cart-input">
-                <input type="text" name="Name" placeholder="Name" class="w-full bg-gray-50 border p-3 rounded-lg text-xs outline-none" required>
-                <input type="text" name="WhatsApp" placeholder="WhatsApp" class="w-full bg-gray-50 border p-3 rounded-lg text-xs outline-none" required>
-                <button type="submit" class="w-full bg-black text-white py-3 rounded-lg font-black text-[10px] uppercase">Confirm Order</button>
-            </form>
-            <button onclick="toggleCart()" class="w-full mt-2 text-[9px] uppercase font-bold text-gray-400">Close</button>
-        </div>
-    </div>
 
     <div id="floating-cart" class="fixed bottom-6 right-6 z-[100] cursor-pointer" onclick="toggleCart()">
         <div class="bg-main p-4 rounded-full shadow-xl relative">
@@ -60,100 +48,81 @@
         </div>
     </div>
 
-   <script>
-    let cart = [];
+    <div id="cart-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden z-[200] flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl w-full max-w-sm p-6 shadow-2xl">
+            <div class="flex justify-between items-center mb-6 border-b pb-2">
+                <h3 class="font-black uppercase text-sm">Your Order</h3>
+                <button onclick="toggleCart()"><i class="fas fa-times text-gray-400 text-xl"></i></button>
+            </div>
+            <div id="cart-items" class="space-y-2 mb-6 max-h-40 overflow-y-auto"></div>
+            <form action="https://formspree.io/f/your-form-id" method="POST" class="space-y-3">
+                <input type="hidden" name="Order_Summary" id="hidden-cart-input">
+                <input type="text" name="Name" placeholder="Full Name" class="w-full bg-gray-50 border p-3 rounded-xl text-xs outline-none" required>
+                <input type="text" name="WhatsApp" placeholder="WhatsApp Number" class="w-full bg-gray-50 border p-3 rounded-xl text-xs outline-none" required>
+                <button type="submit" class="w-full bg-black text-white py-4 rounded-xl font-black text-[10px] uppercase tracking-widest">Confirm via Gmail</button>
+            </form>
+        </div>
+    </div>
 
-    async function loadWebsite() {
-        try {
-            // 1. Load Settings (Color, Contact Info)
-            const settingsResponse = await fetch('settings.json');
-            const settings = await settingsResponse.json();
-            
-            if(settings.site_color) {
-                document.documentElement.style.setProperty('--main-color', settings.site_color);
-            }
-            
-            // Update UI with contact information
-            document.getElementById('f-details').innerHTML = `
-                <span><i class="fab fa-whatsapp text-green-500"></i> ${settings.whatsapp}</span>
-                <span><i class="far fa-envelope text-red-400"></i> ${settings.email}</span>
-                <span><i class="fas fa-map-marker-alt"></i> ${settings.address}</span>
-            `;
+    <script>
+        let cart = [];
 
-            // 2. Load the Master List (list.json)
-            const listResponse = await fetch('content/products/list.json');
-            const productList = await listResponse.json();
+        async function loadWebsite() {
+            try {
+                const settingsRes = await fetch('settings.json');
+                const settings = await settingsRes.json();
+                if(settings.site_color) document.documentElement.style.setProperty('--main-color', settings.site_color);
+                
+                document.getElementById('f-details').innerHTML = `
+                    <span><i class="fab fa-whatsapp"></i> ${settings.whatsapp}</span>
+                    <span><i class="far fa-envelope"></i> ${settings.email}</span>
+                    <span><i class="fas fa-map-marker-alt"></i> ${settings.address}</span>
+                `;
 
-            const productGrid = document.getElementById('product-list');
-            productGrid.innerHTML = ""; // Clear the loading state
+                // Load items listed in list.json
+                const listRes = await fetch('content/products/list.json');
+                const productList = await listRes.json();
+                const pGrid = document.getElementById('product-list');
+                pGrid.innerHTML = ""; 
 
-            // 3. Dynamic Product Loader
-            for (const item of productList) {
-                try {
-                    const productResponse = await fetch(`content/products/${item.file}`);
-                    const product = await productResponse.json();
-
-                    productGrid.innerHTML += `
-                        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col h-full group">
-                            <div class="h-32 md:h-40 overflow-hidden relative">
-                                <img src="${product.image1}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy">
-                            </div>
-                            <div class="p-2 md:p-3 flex flex-col flex-grow text-left">
-                                <h2 class="text-[9px] md:text-[10px] font-bold text-gray-800 leading-tight h-8 overflow-hidden mb-1">${product.title}</h2>
-                                <p class="text-main font-black text-xs">${product.price}</p>
-                                <button onclick="addToCart('${product.title}', '${product.price}', event)" 
-                                    class="mt-2 w-full bg-black text-white py-1.5 rounded-lg uppercase text-[8px] font-black tracking-tighter active:scale-95 transition">
-                                    Add to Cart
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                } catch (productError) {
-                    console.error("Error: Could not load product file - " + item.file);
+                for (const item of productList) {
+                    try {
+                        const pRes = await fetch(`content/products/${item.file}`);
+                        const p = await pRes.json();
+                        pGrid.innerHTML += `
+                            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col h-full group">
+                                <div class="h-36 md:h-44 overflow-hidden relative">
+                                    <img src="${p.image1}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                                </div>
+                                <div class="p-3 flex flex-col flex-grow">
+                                    <h2 class="text-[10px] font-black text-gray-800 leading-tight h-8 overflow-hidden">${p.title}</h2>
+                                    <p class="text-main font-black text-xs mt-1">${p.price}</p>
+                                    <button onclick="addToCart('${p.title}', '${p.price}', event)" 
+                                        class="mt-auto w-full bg-black text-white py-2 rounded-lg uppercase text-[8px] font-black tracking-tighter active:scale-95 transition">
+                                        Add to Cart
+                                    </button>
+                                </div>
+                            </div>`;
+                    } catch (e) { console.error("Missing file:", item.file); }
                 }
-            }
-        } catch (masterListError) { 
-            console.error("Error: Master list.json is missing or invalid.");
-            document.getElementById('product-list').innerHTML = `
-                <p class="col-span-full text-center text-gray-300 py-10 uppercase text-[10px] font-bold tracking-widest">
-                    No products found in the collection.
-                </p>`;
+            } catch (e) { console.error("System Error"); }
         }
-    }
 
-    // Shopping Cart Logic
-    function addToCart(name, price, event) {
-        cart.push({name, price});
-        document.getElementById('cart-count').innerText = cart.length;
-        
-        // Success feedback on button
-        const originalBtnText = event.target.innerText;
-        event.target.innerText = "Added!";
-        setTimeout(() => event.target.innerText = originalBtnText, 1000);
-    }
-
-    function updateCartUI() {
-        const cartItemsContainer = document.getElementById('cart-items');
-        if(cart.length === 0) {
-            cartItemsContainer.innerHTML = `<p class="text-center text-gray-300 py-5 text-[10px] uppercase font-bold">Your cart is empty</p>`;
-        } else {
-            cartItemsContainer.innerHTML = cart.map(item => `
-                <div class="flex justify-between items-center bg-gray-50 p-2 rounded-lg text-[10px] font-bold">
-                    <span>${item.name}</span>
-                    <span class="text-main">${item.price}</span>
-                </div>
-            `).join('');
+        function addToCart(name, price, event) {
+            cart.push({name, price});
+            document.getElementById('cart-count').innerText = cart.length;
+            event.target.innerText = "Added!";
+            setTimeout(() => event.target.innerText = "Add to Cart", 1000);
         }
-        document.getElementById('hidden-cart-input').value = JSON.stringify(cart);
-    }
 
-    function toggleCart() { 
-        updateCartUI();
-        document.getElementById('cart-modal').classList.toggle('hidden'); 
-    }
+        function updateCartUI() {
+            const itemsDiv = document.getElementById('cart-items');
+            itemsDiv.innerHTML = cart.map(item => `<div class="flex justify-between text-[10px] bg-gray-50 p-2 rounded"><span>${item.name}</span><b>${item.price}</b></div>`).join('');
+            document.getElementById('hidden-cart-input').value = JSON.stringify(cart);
+        }
 
-    // Initialize the website
-    loadWebsite();
-</script>
+        function toggleCart() { updateCartUI(); document.getElementById('cart-modal').classList.toggle('hidden'); }
+        loadWebsite();
+    </script>
 </body>
 </html>
