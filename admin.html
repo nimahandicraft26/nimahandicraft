@@ -3,102 +3,182 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nima Cloud Admin | Smart Login</title>
+    <title>Nima Store | Admin Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 min-h-screen pb-20">
+<body class="bg-gray-100 min-h-screen">
 
     <div id="lock" class="fixed inset-0 bg-black z-[500] flex items-center justify-center p-6">
         <div class="bg-white p-8 rounded-3xl w-full max-w-sm shadow-2xl">
-            <h2 class="font-black text-center uppercase mb-6 text-2xl tracking-tighter">Nima Login</h2>
-            <input type="password" id="admin-pass" placeholder="Admin Password" class="w-full border-2 p-4 rounded-xl mb-4 outline-none focus:border-red-500 text-center font-bold">
+            <h2 class="font-black text-center uppercase mb-6 text-2xl tracking-tighter text-gray-800">Admin Login</h2>
             
-            <div id="token-box">
-                <input type="password" id="gh-token" placeholder="Paste GitHub Token (One time only)" class="w-full border-2 p-4 rounded-xl mb-6 outline-none focus:border-red-500 text-xs text-center">
+            <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Password</label>
+            <input type="password" id="admin-pass" placeholder="Enter Password" class="w-full border-2 p-4 rounded-xl mb-4 outline-none focus:border-blue-500 text-center font-bold">
+            
+            <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">GitHub Token</label>
+            <input type="password" id="gh-token" placeholder="ghp_xxxxxxxxxxxx" class="w-full border-2 p-4 rounded-xl mb-2 outline-none focus:border-blue-500 text-xs text-center">
+            
+            <div class="flex items-center gap-2 mb-6 ml-1">
+                <input type="checkbox" id="remember-check" class="w-4 h-4 cursor-pointer">
+                <label for="remember-check" class="text-xs text-gray-500 cursor-pointer uppercase font-bold">Remember Token</label>
             </div>
 
-            <button onclick="login()" class="w-full bg-black text-white py-5 rounded-xl font-black uppercase tracking-widest active:scale-95 transition">Login</button>
+            <button onclick="login()" id="login-btn" class="w-full bg-blue-600 text-white py-5 rounded-xl font-black uppercase tracking-widest active:scale-95 transition shadow-lg shadow-blue-100">Login to Dashboard</button>
             <p id="status-msg" class="text-[10px] text-gray-400 mt-4 text-center italic"></p>
         </div>
     </div>
 
     <div id="dashboard" class="max-w-2xl mx-auto pt-10 px-4 hidden">
         <div class="bg-white p-8 rounded-[40px] shadow-xl space-y-10">
-            
             <div class="flex justify-between items-center border-b pb-4">
-                <h2 class="font-black uppercase text-xl">Dashboard</h2>
-                <button onclick="logout()" class="text-[10px] bg-gray-100 px-3 py-1 rounded-full font-bold text-gray-500 hover:bg-red-50 hover:text-red-500">Logout & Clear Token</button>
+                <h2 class="font-black uppercase text-xl text-blue-600">Store Management</h2>
+                <button onclick="logout()" class="text-[10px] bg-gray-100 px-4 py-2 rounded-full font-bold text-gray-500 hover:bg-red-500 hover:text-white transition">Logout</button>
             </div>
 
             <section class="space-y-4">
-                <h3 class="font-black text-red-500 uppercase text-xs">1. Shop Identity & Style</h3>
-                <input type="text" id="s-name" placeholder="New Shop Name" class="w-full border-2 p-4 rounded-2xl outline-none">
+                <h3 class="font-black text-gray-400 uppercase text-[10px] tracking-widest">1. Website Identity</h3>
+                <input type="text" id="s-name" placeholder="Shop Name" class="w-full border-2 p-4 rounded-2xl outline-none">
                 <div class="flex gap-4">
-                    <input type="text" id="s-color" placeholder="Brand Color (#hex)" class="flex-grow border-2 p-4 rounded-2xl outline-none">
-                    <input type="color" id="color-picker" oninput="document.getElementById('s-color').value=this.value" class="h-14 w-14 rounded-2xl cursor-pointer border-none">
+                    <input type="text" id="s-color" placeholder="Brand Color Hex (e.g. #000000)" class="flex-grow border-2 p-4 rounded-2xl outline-none">
+                    <input type="color" id="color-picker" oninput="document.getElementById('s-color').value=this.value" class="h-14 w-14 rounded-2xl cursor-pointer border-none shadow-sm">
                 </div>
                 <div class="grid grid-cols-2 gap-4">
-                    <input type="text" id="s-logo" placeholder="Logo filename" class="border-2 p-4 rounded-2xl">
-                    <input type="text" id="s-cover" placeholder="Cover filename" class="border-2 p-4 rounded-2xl">
+                    <input type="text" id="s-logo" placeholder="Logo filename (logo.png)" class="border-2 p-4 rounded-2xl outline-none">
+                    <input type="text" id="s-cover" placeholder="Cover filename (cover.jpg)" class="border-2 p-4 rounded-2xl outline-none">
                 </div>
-                <button onclick="saveSettings()" id="btn-s" class="w-full bg-black text-white py-5 rounded-2xl font-black uppercase tracking-widest shadow-lg active:scale-95 transition">Update Website Now</button>
+                <button onclick="saveSettings()" id="btn-s" class="w-full bg-black text-white py-5 rounded-2xl font-black uppercase tracking-widest shadow-lg active:scale-95 transition">Update Website</button>
             </section>
 
-            <hr class="border-gray-100">
+            <hr class="opacity-50">
 
             <section class="space-y-4">
-                <h3 class="font-black text-red-500 uppercase text-xs">2. Add New Product</h3>
-                <input type="text" id="p-title" placeholder="Product Title" class="w-full border-2 p-4 rounded-2xl">
-                <input type="text" id="p-price" placeholder="Price (e.g. 150 AED)" class="w-full border-2 p-4 rounded-2xl">
-                <input type="text" id="p-img" placeholder="Image Name (e.g. bag5.jpg)" class="w-full border-2 p-4 rounded-2xl">
-                <button onclick="addProduct()" id="btn-p" class="w-full bg-red-600 text-white py-5 rounded-2xl font-black uppercase tracking-widest shadow-lg active:scale-95 transition">Upload to Live Store</button>
+                <h3 class="font-black text-gray-400 uppercase text-[10px] tracking-widest">2. Add New Product</h3>
+                <input type="text" id="p-title" placeholder="Product Title" class="w-full border-2 p-4 rounded-2xl outline-none">
+                <input type="text" id="p-price" placeholder="Price (e.g. 150 AED)" class="w-full border-2 p-4 rounded-2xl outline-none">
+                <input type="text" id="p-img" placeholder="Image Filename (e.g. bag5.jpg)" class="w-full border-2 p-4 rounded-2xl outline-none">
+                <button onclick="addProduct()" id="btn-p" class="w-full bg-blue-600 text-white py-5 rounded-2xl font-black uppercase tracking-widest shadow-lg shadow-blue-50 active:scale-95 transition">Upload to Store</button>
             </section>
         </div>
     </div>
 
     <script>
-    let GITHUB_TOKEN = "";
-    // !!! SET YOUR CORRECT REPO NAME HERE !!!
-    const REPO = "nimahandicraft26/nimahandicraft"; 
+        let GITHUB_TOKEN = "";
+        // !!! IMPORTANT: CHANGE THIS TO YOUR ACTUAL GITHUB USERNAME/REPO !!!
+        const REPO = "nimahandicraft26/nimahandicraft"; 
 
-    window.onload = function() {
-        // Checking if token is saved in browser memory
-        const savedToken = localStorage.getItem('nima_gh_token');
-        if(savedToken) {
-            document.getElementById('gh-token').value = savedToken;
-            document.getElementById('remember-check').checked = true;
-            console.log("Saved token found and loaded.");
-        }
-    };
-
-    function login() {
-        const passInput = document.getElementById('admin-pass').value;
-        const tokenInput = document.getElementById('gh-token').value;
-        const rememberMe = document.getElementById('remember-check').checked;
-
-        // CHECK YOUR PASSWORD HERE:
-        if(passInput === "Nimahandicraft2026@*") {
-            // Check if Token starts with ghp_
-            if(tokenInput.startsWith("ghp_")) {
-                GITHUB_TOKEN = tokenInput;
-                
-                // If 'Remember Me' is checked, save it
-                if(rememberMe) {
-                    localStorage.setItem('nima_gh_token', GITHUB_TOKEN);
-                } else {
-                    localStorage.removeItem('nima_gh_token');
-                }
-
-                // Open Dashboard
-                document.getElementById('lock').classList.add('hidden');
-                document.getElementById('dashboard').classList.remove('hidden');
-            } else {
-                alert("Invalid GitHub Token! It must start with 'ghp_'.");
+        // Check if token exists on load
+        window.onload = function() {
+            const savedToken = localStorage.getItem('nima_gh_token');
+            if(savedToken) {
+                document.getElementById('gh-token').value = savedToken;
+                document.getElementById('remember-check').checked = true;
+                document.getElementById('status-msg').innerText = "Saved token detected ✔";
             }
-        } else {
-            alert("Wrong Password! Please use the correct password to login.");
+        };
+
+        async function login() {
+            const passInput = document.getElementById('admin-pass').value;
+            const tokenInput = document.getElementById('gh-token').value;
+            const rememberMe = document.getElementById('remember-check').checked;
+            const btn = document.getElementById('login-btn');
+
+            // 1. Password Verification (Change 'nima@2026' if you want a new password)
+            if(passInput !== "Nimahandicraft2026@*") {
+                alert("Incorrect Password!");
+                return;
+            }
+
+            // 2. Token Format Check
+            if(!tokenInput.startsWith("ghp_")) {
+                alert("Invalid Token! Ensure it starts with 'ghp_'");
+                return;
+            }
+
+            btn.innerText = "Verifying Account...";
+            GITHUB_TOKEN = tokenInput;
+
+            try {
+                // Verify Connection with GitHub API
+                const res = await fetch(`https://api.github.com/repos/${REPO}`, {
+                    headers: { 'Authorization': `token ${GITHUB_TOKEN}` }
+                });
+
+                if(res.ok) {
+                    if(rememberMe) {
+                        localStorage.setItem('nima_gh_token', GITHUB_TOKEN);
+                    } else {
+                        localStorage.removeItem('nima_gh_token');
+                    }
+                    
+                    document.getElementById('lock').classList.add('hidden');
+                    document.getElementById('dashboard').classList.remove('hidden');
+                } else {
+                    const err = await res.json();
+                    alert("Login Failed: " + err.message + "\nCheck your Repo path in the code.");
+                    btn.innerText = "Login to Dashboard";
+                }
+            } catch (e) {
+                alert("Connection Error. Please check your internet.");
+                btn.innerText = "Login to Dashboard";
+            }
         }
-    }
-</script>
+
+        function logout() {
+            localStorage.removeItem('nima_gh_token');
+            location.reload();
+        }
+
+        async function pushToGitHub(path, content, sha = null) {
+            const url = `https://api.github.com/repos/${REPO}/contents/${path}`;
+            if (!sha) {
+                const res = await fetch(url, { headers: { Authorization: `token ${GITHUB_TOKEN}` } });
+                if (res.ok) { const d = await res.json(); sha = d.sha; }
+            }
+            const response = await fetch(url, {
+                method: "PUT",
+                headers: { Authorization: `token ${GITHUB_TOKEN}`, "Content-Type": "application/json" },
+                body: JSON.stringify({ message: "Update from Admin Panel", content: btoa(content), sha: sha })
+            });
+            return response.ok;
+        }
+
+        async function saveSettings() {
+            const btn = document.getElementById('btn-s'); btn.innerText = "Saving...";
+            const data = {
+                site_name: document.getElementById('s-name').value,
+                site_color: document.getElementById('s-color').value,
+                logo: "images/" + document.getElementById('s-logo').value,
+                cover: "images/" + document.getElementById('s-cover').value,
+                whatsapp: "+971XXXXXXXXX",
+                email: "info@nima.com",
+                address: "Dubai, UAE"
+            };
+            const success = await pushToGitHub('settings.json', JSON.stringify(data, null, 2));
+            btn.innerText = success ? "Success!" : "Failed!";
+            setTimeout(() => btn.innerText = "Update Website", 2000);
+        }
+
+        async function addProduct() {
+            const btn = document.getElementById('btn-p'); btn.innerText = "Uploading...";
+            const title = document.getElementById('p-title').value;
+            const price = document.getElementById('p-price').value;
+            const img = document.getElementById('p-img').value;
+            const file = img.split('.')[0] + ".json";
+
+            const pData = { title, price, image1: "images/"+img, description: "" };
+            await pushToGitHub(`content/products/${file}`, JSON.stringify(pData, null, 2));
+
+            const lRes = await fetch(`https://api.github.com/repos/${REPO}/contents/content/products/list.json`, {
+                headers: { Authorization: `token ${GITHUB_TOKEN}` }
+            });
+            const lData = await lRes.json();
+            const list = JSON.parse(atob(lData.content));
+            list.push({ file: file });
+            
+            const success = await pushToGitHub('content/products/list.json', JSON.stringify(list, null, 2), lData.sha);
+            btn.innerText = success ? "Product Live!" : "Error!";
+            setTimeout(() => btn.innerText = "Upload to Store", 2000);
+        }
+    </script>
 </body>
 </html>
