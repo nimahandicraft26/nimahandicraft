@@ -1,8 +1,9 @@
 {
-  "site_name": "Nima Handicraft",
-  "whatsapp": "+971 50 851 9937",
-  "email": "nimahandicraft@gmail.com",
-  "address": "Deira, Dubai, UAE",
-  "description": "Authentic Handmade Products",
-  "site_color": "#ea4747"
+  "site_name": "",
+  "site_color": "#d71919",
+  "logo": "images/",
+  "cover": "images/",
+  "whatsapp": "",
+  "email": "",
+  "address": ""
 }
