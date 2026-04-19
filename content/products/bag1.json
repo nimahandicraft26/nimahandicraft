@@ -1,1 +1,11 @@
-
+{
+  "title": "beautifull Handmade Bag",
+  "price": "200 AED",
+  "image1": "images/bag1-1.jpeg",
+  "image2": "images/bag1-2.jpeg",
+  "image3": "images/bag1-3.jpeg",
+  "image4": "images/bag1-4.jpeg",
+  "image5": "images/bag1-5.jpeg",
+  "video": "images/bag1-video.mp4",
+  "description": "High-quality authentic handmade bag. Crafted with traditional techniques, durable materials, and unique design."
+}
