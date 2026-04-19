@@ -2,56 +2,134 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Nima Admin | Add Products</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nima Master Cloud Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 p-8">
-    <div class="max-w-lg mx-auto bg-white p-8 rounded-2xl shadow-xl">
-        <h1 class="text-2xl font-black mb-6 uppercase italic">Add New Product</h1>
-        
-        <div class="space-y-4">
-            <div>
-                <label class="block text-xs font-bold uppercase text-gray-400 mb-1">Product Title</label>
-                <input type="text" id="p-title" placeholder="e.g. Premium Leather Bag" class="w-full border p-4 rounded-xl outline-none focus:border-red-500">
-            </div>
-            
-            <div>
-                <label class="block text-xs font-bold uppercase text-gray-400 mb-1">Price (e.g. 200 AED)</label>
-                <input type="text" id="p-price" placeholder="200 AED" class="w-full border p-4 rounded-xl outline-none focus:border-red-500">
-            </div>
+<body class="bg-gray-100 min-h-screen pb-20">
 
-            <div>
-                <label class="block text-xs font-bold uppercase text-gray-400 mb-1">Description</label>
-                <textarea id="p-desc" class="w-full border p-4 rounded-xl outline-none focus:border-red-500"></textarea>
-            </div>
-
-            <button onclick="generateJSON()" class="w-full bg-black text-white py-4 rounded-xl font-black uppercase tracking-widest hover:bg-gray-800 transition">
-                Generate Product Code
-            </button>
+    <div id="lock" class="fixed inset-0 bg-black z-[500] flex items-center justify-center p-6">
+        <div class="bg-white p-8 rounded-3xl w-full max-w-sm shadow-2xl">
+            <h2 class="font-black text-center uppercase mb-6 text-2xl tracking-tighter">Nima Login</h2>
+            <input type="password" id="admin-pass" placeholder="Admin Password" class="w-full border-2 p-4 rounded-xl mb-4 outline-none focus:border-red-500">
+            <input type="password" id="gh-token" placeholder="Paste GitHub Token Here" class="w-full border-2 p-4 rounded-xl mb-6 outline-none focus:border-red-500 text-xs">
+            <button onclick="login()" class="w-full bg-black text-white py-5 rounded-xl font-black uppercase tracking-widest active:scale-95 transition">Enter Dashboard</button>
         </div>
+    </div>
 
-        <div id="output-area" class="mt-8 hidden">
-            <p class="text-red-500 text-xs font-bold mb-2 uppercase">Copy this and create a new JSON file:</p>
-            <textarea id="json-output" class="w-full h-40 border p-4 bg-gray-50 rounded-xl text-xs font-mono" readonly></textarea>
+    <div class="max-w-2xl mx-auto pt-10 px-4">
+        <div class="bg-white p-8 rounded-[40px] shadow-xl space-y-10">
+            
+            <section class="space-y-4">
+                <h3 class="font-black text-red-500 uppercase text-xs border-b pb-2">1. Shop Identity & Style</h3>
+                <input type="text" id="s-name" placeholder="New Shop Name" class="w-full border-2 p-4 rounded-2xl outline-none">
+                
+                <div class="flex gap-4">
+                    <input type="text" id="s-color" placeholder="Brand Color (#hex)" class="flex-grow border-2 p-4 rounded-2xl outline-none">
+                    <input type="color" id="color-picker" oninput="document.getElementById('s-color').value=this.value" class="h-14 w-14 rounded-2xl cursor-pointer border-none">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-[9px] font-bold text-gray-400 uppercase ml-2">Logo Filename</label>
+                        <input type="text" id="s-logo" placeholder="logo.jpg" class="w-full border-2 p-4 rounded-2xl outline-none">
+                    </div>
+                    <div>
+                        <label class="text-[9px] font-bold text-gray-400 uppercase ml-2">Cover Filename</label>
+                        <input type="text" id="s-cover" placeholder="cover.jpg" class="w-full border-2 p-4 rounded-2xl outline-none">
+                    </div>
+                </div>
+                
+                <button onclick="saveSettings()" id="btn-s" class="w-full bg-black text-white py-5 rounded-2xl font-black uppercase tracking-widest shadow-lg active:scale-95 transition">Update Website Now</button>
+            </section>
+
+            <hr class="border-gray-100">
+
+            <section class="space-y-4">
+                <h3 class="font-black text-red-500 uppercase text-xs border-b pb-2">2. Add New Product</h3>
+                <input type="text" id="p-title" placeholder="Product Title (e.g. Silk Bag)" class="w-full border-2 p-4 rounded-2xl outline-none">
+                <input type="text" id="p-price" placeholder="Price (e.g. 150 AED)" class="w-full border-2 p-4 rounded-2xl outline-none">
+                <input type="text" id="p-img" placeholder="Image Name (e.g. bag5.jpg)" class="w-full border-2 p-4 rounded-2xl outline-none">
+                <textarea id="p-desc" placeholder="Brief Description..." class="w-full border-2 p-4 rounded-2xl outline-none h-24"></textarea>
+                
+                <button onclick="addProduct()" id="btn-p" class="w-full bg-red-600 text-white py-5 rounded-2xl font-black uppercase tracking-widest shadow-lg shadow-red-100 active:scale-95 transition">Upload to Live Store</button>
+            </section>
+
         </div>
     </div>
 
     <script>
-        function generateJSON() {
+        let GITHUB_TOKEN = "";
+        // !!! CHANGE THE LINE BELOW TO YOUR REAL GITHUB INFO !!!
+        const REPO = "nimahandicraft26/nimahandicraft"; 
+
+        function login() {
+            const pass = document.getElementById('admin-pass').value;
+            GITHUB_TOKEN = document.getElementById('gh-token').value;
+            if(pass === "nima@2026" && GITHUB_TOKEN.startsWith("ghp_")) {
+                document.getElementById('lock').classList.add('hidden');
+            } else { alert("Wrong Password or Invalid Token!"); }
+        }
+
+        async function saveToGitHub(path, content, sha = null) {
+            const url = `https://api.github.com/repos/${REPO}/contents/${path}`;
+            if (!sha) {
+                const res = await fetch(url, { headers: { Authorization: `token ${GITHUB_TOKEN}` } });
+                if (res.ok) { const data = await res.json(); sha = data.sha; }
+            }
+            const response = await fetch(url, {
+                method: "PUT",
+                headers: { Authorization: `token ${GITHUB_TOKEN}`, "Content-Type": "application/json" },
+                body: JSON.stringify({ message: `Admin Update: ${path}`, content: btoa(unescape(encodeURIComponent(content))), sha: sha })
+            });
+            return response.ok;
+        }
+
+        async function saveSettings() {
+            const btn = document.getElementById('btn-s'); btn.innerText = "Processing...";
+            const data = {
+                site_name: document.getElementById('s-name').value,
+                site_color: document.getElementById('s-color').value,
+                logo: "images/" + document.getElementById('s-logo').value,
+                cover: "images/" + document.getElementById('s-cover').value,
+                whatsapp: "+971XXXXXXXXX", 
+                email: "info@nima.com",
+                address: "Dubai, UAE"
+            };
+            const success = await saveToGitHub('settings.json', JSON.stringify(data, null, 2));
+            if(success) {
+                btn.innerText = "Website Updated!";
+                setTimeout(() => btn.innerText = "Update Website Now", 2000);
+            } else { alert("Error saving settings. Check Repo Name and Token."); btn.innerText = "Error!"; }
+        }
+
+        async function addProduct() {
+            const btn = document.getElementById('btn-p'); btn.innerText = "Uploading...";
             const title = document.getElementById('p-title').value;
             const price = document.getElementById('p-price').value;
+            const img = document.getElementById('p-img').value;
             const desc = document.getElementById('p-desc').value;
-            
-            // This creates the format for your bag.json files
-            const productData = {
-                "title": title,
-                "price": price,
-                "image1": "images/placeholder.jpeg", // You will replace this with your actual image name
-                "description": desc
-            };
+            const fileName = img.split('.')[0] + ".json";
 
-            document.getElementById('json-output').value = JSON.stringify(productData, null, 2);
-            document.getElementById('output-area').classList.remove('hidden');
+            // 1. Create individual product file
+            const pData = { title, price, image1: "images/"+img, description: desc };
+            await saveToGitHub(`content/products/${fileName}`, JSON.stringify(pData, null, 2));
+
+            // 2. Update list.json
+            const lRes = await fetch(`https://api.github.com/repos/${REPO}/contents/content/products/list.json`, {
+                headers: { Authorization: `token ${GITHUB_TOKEN}` }
+            });
+            const lData = await lRes.json();
+            const list = JSON.parse(atob(lData.content));
+            list.push({ file: fileName });
+            
+            const success = await saveToGitHub('content/products/list.json', JSON.stringify(list, null, 2), lData.sha);
+            
+            if(success) {
+                btn.innerText = "Product is Live!";
+                document.getElementById('p-title').value = "";
+                setTimeout(() => btn.innerText = "Upload to Live Store", 2000);
+            } else { alert("Failed to update list.json"); btn.innerText = "Error!"; }
         }
     </script>
 </body>
