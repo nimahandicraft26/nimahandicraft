@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Nima Admin | Add Products</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-lg mx-auto bg-white p-8 rounded-2xl shadow-xl">
+        <h1 class="text-2xl font-black mb-6 uppercase italic">Add New Product</h1>
+        
+        <div class="space-y-4">
+            <div>
+                <label class="block text-xs font-bold uppercase text-gray-400 mb-1">Product Title</label>
+                <input type="text" id="p-title" placeholder="e.g. Premium Leather Bag" class="w-full border p-4 rounded-xl outline-none focus:border-red-500">
+            </div>
+            
+            <div>
+                <label class="block text-xs font-bold uppercase text-gray-400 mb-1">Price (e.g. 200 AED)</label>
+                <input type="text" id="p-price" placeholder="200 AED" class="w-full border p-4 rounded-xl outline-none focus:border-red-500">
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold uppercase text-gray-400 mb-1">Description</label>
+                <textarea id="p-desc" class="w-full border p-4 rounded-xl outline-none focus:border-red-500"></textarea>
+            </div>
+
+            <button onclick="generateJSON()" class="w-full bg-black text-white py-4 rounded-xl font-black uppercase tracking-widest hover:bg-gray-800 transition">
+                Generate Product Code
+            </button>
+        </div>
+
+        <div id="output-area" class="mt-8 hidden">
+            <p class="text-red-500 text-xs font-bold mb-2 uppercase">Copy this and create a new JSON file:</p>
+            <textarea id="json-output" class="w-full h-40 border p-4 bg-gray-50 rounded-xl text-xs font-mono" readonly></textarea>
+        </div>
+    </div>
+
+    <script>
+        function generateJSON() {
+            const title = document.getElementById('p-title').value;
+            const price = document.getElementById('p-price').value;
+            const desc = document.getElementById('p-desc').value;
+            
+            // This creates the format for your bag.json files
+            const productData = {
+                "title": title,
+                "price": price,
+                "image1": "images/placeholder.jpeg", // You will replace this with your actual image name
+                "description": desc
+            };
+
+            document.getElementById('json-output').value = JSON.stringify(productData, null, 2);
+            document.getElementById('output-area').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
