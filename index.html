@@ -60,60 +60,100 @@
         </div>
     </div>
 
-    <script>
-        let cart = [];
-        async function loadWebsite() {
-            try {
-                const sRes = await fetch('settings.json');
-                const settings = await sRes.json();
-                if(settings.site_color) document.documentElement.style.setProperty('--main-color', settings.site_color);
-                
-                document.getElementById('f-details').innerHTML = `
-                    <span><i class="fab fa-whatsapp"></i> ${settings.whatsapp}</span>
-                    <span><i class="far fa-envelope text-red-400"></i> ${settings.email}</span>
-                    <span><i class="fas fa-map-marker-alt"></i> ${settings.address}</span>
-                `;
+   <script>
+    let cart = [];
 
-                const pRes = await fetch('content/products/bag1.json');
-                const product = await pRes.json();
-                const pList = document.getElementById('product-list');
-                pList.innerHTML = "";
+    async function loadWebsite() {
+        try {
+            // 1. Load Settings (Color, Contact Info)
+            const settingsResponse = await fetch('settings.json');
+            const settings = await settingsResponse.json();
+            
+            if(settings.site_color) {
+                document.documentElement.style.setProperty('--main-color', settings.site_color);
+            }
+            
+            // Update UI with contact information
+            document.getElementById('f-details').innerHTML = `
+                <span><i class="fab fa-whatsapp text-green-500"></i> ${settings.whatsapp}</span>
+                <span><i class="far fa-envelope text-red-400"></i> ${settings.email}</span>
+                <span><i class="fas fa-map-marker-alt"></i> ${settings.address}</span>
+            `;
 
-                // सामान ६ वटा देखिने बनाउन (Loop for 6 items)
-                for(let i=0; i<6; i++) {
-                    pList.innerHTML += `
-                        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col h-full">
-                            <div class="h-32 md:h-40 overflow-hidden">
-                                <img src="${product.image1}" class="w-full h-full object-cover">
+            // 2. Load the Master List (list.json)
+            const listResponse = await fetch('content/products/list.json');
+            const productList = await listResponse.json();
+
+            const productGrid = document.getElementById('product-list');
+            productGrid.innerHTML = ""; // Clear the loading state
+
+            // 3. Dynamic Product Loader
+            for (const item of productList) {
+                try {
+                    const productResponse = await fetch(`content/products/${item.file}`);
+                    const product = await productResponse.json();
+
+                    productGrid.innerHTML += `
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col h-full group">
+                            <div class="h-32 md:h-40 overflow-hidden relative">
+                                <img src="${product.image1}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy">
                             </div>
-                            <div class="p-2 flex flex-col flex-grow">
-                                <h2 class="text-[9px] font-bold text-gray-800 leading-tight mb-1 h-6 overflow-hidden">${product.title}</h2>
+                            <div class="p-2 md:p-3 flex flex-col flex-grow text-left">
+                                <h2 class="text-[9px] md:text-[10px] font-bold text-gray-800 leading-tight h-8 overflow-hidden mb-1">${product.title}</h2>
                                 <p class="text-main font-black text-xs">${product.price}</p>
-                                <button onclick="addToCart('${product.title}', '${product.price}')" 
-                                    class="mt-auto w-full bg-black text-white py-1.5 rounded-md uppercase text-[8px] font-black tracking-tighter">
-                                    Add
+                                <button onclick="addToCart('${product.title}', '${product.price}', event)" 
+                                    class="mt-2 w-full bg-black text-white py-1.5 rounded-lg uppercase text-[8px] font-black tracking-tighter active:scale-95 transition">
+                                    Add to Cart
                                 </button>
                             </div>
                         </div>
                     `;
+                } catch (productError) {
+                    console.error("Error: Could not load product file - " + item.file);
                 }
-            } catch (e) { console.error("Error loading files"); }
+            }
+        } catch (masterListError) { 
+            console.error("Error: Master list.json is missing or invalid.");
+            document.getElementById('product-list').innerHTML = `
+                <p class="col-span-full text-center text-gray-300 py-10 uppercase text-[10px] font-bold tracking-widest">
+                    No products found in the collection.
+                </p>`;
         }
+    }
 
-        function addToCart(name, price) {
-            cart.push({name, price});
-            document.getElementById('cart-count').innerText = cart.length;
-            updateCartUI();
+    // Shopping Cart Logic
+    function addToCart(name, price, event) {
+        cart.push({name, price});
+        document.getElementById('cart-count').innerText = cart.length;
+        
+        // Success feedback on button
+        const originalBtnText = event.target.innerText;
+        event.target.innerText = "Added!";
+        setTimeout(() => event.target.innerText = originalBtnText, 1000);
+    }
+
+    function updateCartUI() {
+        const cartItemsContainer = document.getElementById('cart-items');
+        if(cart.length === 0) {
+            cartItemsContainer.innerHTML = `<p class="text-center text-gray-300 py-5 text-[10px] uppercase font-bold">Your cart is empty</p>`;
+        } else {
+            cartItemsContainer.innerHTML = cart.map(item => `
+                <div class="flex justify-between items-center bg-gray-50 p-2 rounded-lg text-[10px] font-bold">
+                    <span>${item.name}</span>
+                    <span class="text-main">${item.price}</span>
+                </div>
+            `).join('');
         }
+        document.getElementById('hidden-cart-input').value = JSON.stringify(cart);
+    }
 
-        function updateCartUI() {
-            const itemsDiv = document.getElementById('cart-items');
-            itemsDiv.innerHTML = cart.map(item => `<div class="flex justify-between text-[10px] bg-gray-50 p-2 rounded"><span>${item.name}</span><b>${item.price}</b></div>`).join('');
-            document.getElementById('hidden-cart-input').value = JSON.stringify(cart);
-        }
+    function toggleCart() { 
+        updateCartUI();
+        document.getElementById('cart-modal').classList.toggle('hidden'); 
+    }
 
-        function toggleCart() { document.getElementById('cart-modal').classList.toggle('hidden'); }
-        loadWebsite();
-    </script>
+    // Initialize the website
+    loadWebsite();
+</script>
 </body>
 </html>
