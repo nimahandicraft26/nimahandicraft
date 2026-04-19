@@ -3,153 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nima Handicraft | Premium Handmade Store</title>
-    <meta name="description" content="Authentic premium handmade products. High-quality collection in Dubai, UAE.">
+    <title>Nima Handicraft | Official</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --main-color: #ea4747; }
-        body { font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        body { font-family: 'Inter', sans-serif; }
         .bg-main { background-color: var(--main-color); }
         .text-main { color: var(--main-color); }
-        .border-main { border-color: var(--main-color); }
     </style>
 </head>
 <body class="bg-gray-50 flex flex-col min-h-screen">
 
-    <header class="relative w-full h-40 md:h-56 bg-gray-200 flex flex-col items-center justify-center text-center">
-        <img src="images/cover.jpeg" class="absolute inset-0 w-full h-full object-cover opacity-80" alt="Cover">
-        
-        <div class="relative z-10 flex flex-col items-center">
-            <div class="bg-white p-1 rounded-full shadow-2xl mb-2 border-2 border-white">
-                <img src="images/logo.jpeg" class="h-12 md:h-16 w-12 md:w-16 rounded-full object-cover" alt="Logo">
+    <header class="relative w-full h-28 md:h-40 flex flex-col items-center justify-center text-center overflow-hidden">
+        <img src="images/cover.jpeg" class="absolute inset-0 w-full h-full object-cover opacity-90" alt="Cover">
+        <div class="relative z-10">
+            <div class="bg-white p-1 rounded-full shadow-lg inline-block mb-1">
+                <img src="images/logo.jpeg" class="h-10 md:h-14 w-10 md:w-14 rounded-full object-cover">
             </div>
-            <h1 class="text-white text-xl md:text-3xl font-black uppercase tracking-[0.2em] drop-shadow-lg" id="shop-name-display">
-                Nima Handicraft
-            </h1>
-            <p class="text-white text-[8px] md:text-[10px] uppercase tracking-[0.4em] font-bold opacity-90 drop-shadow-md">
-                Premium Collection
-            </p>
+            <h1 class="text-white text-lg md:text-2xl font-black uppercase tracking-widest drop-shadow-md">Nima Handicraft</h1>
         </div>
     </header>
 
-    <main class="flex-grow max-w-[1400px] mx-auto py-8 px-4 w-full">
-        <div class="flex items-center justify-between border-b-2 border-main mb-8 pb-2">
-            <h2 class="text-sm md:text-lg font-black uppercase tracking-widest text-gray-800 italic">Our Products</h2>
-            <div id="f-details-top" class="hidden md:flex gap-4 text-[10px] font-bold text-gray-400 uppercase">
-                </div>
+    <main class="flex-grow max-w-[1500px] mx-auto py-6 px-2 w-full">
+        <div class="border-b border-gray-200 mb-6 pb-2">
+            <h2 class="text-[10px] font-black uppercase tracking-[0.3em] text-gray-400">Our Premium Collection</h2>
         </div>
 
-        <div id="product-list" class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4">
-            <p class="col-span-full text-center text-gray-400 py-10 uppercase text-[10px] font-bold tracking-widest">Loading Collection...</p>
-        </div>
+        <div id="product-list" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+            </div>
     </main>
 
-    <div id="floating-cart" class="fixed bottom-6 right-6 z-[100] cursor-pointer" onclick="toggleCart()">
-        <div class="bg-main p-4 rounded-full shadow-2xl flex items-center justify-center relative transform transition hover:scale-110 active:scale-95">
-            <i class="fas fa-shopping-bag text-white text-lg"></i>
-            <span id="cart-count" class="absolute -top-1 -right-1 bg-black text-white text-[9px] font-bold rounded-full h-5 w-5 flex items-center justify-center border-2 border-white">0</span>
-        </div>
-    </div>
-
-    <div id="cart-modal" class="fixed inset-0 bg-black/70 backdrop-blur-md hidden z-[200] flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6">
-            <div class="flex justify-between items-center mb-6 border-b pb-2">
-                <h3 class="text-lg font-black uppercase tracking-tight">Your Cart</h3>
-                <button onclick="toggleCart()" class="text-gray-400 hover:text-black"><i class="fas fa-times text-xl"></i></button>
-            </div>
-            <div id="cart-items" class="space-y-2 mb-6 max-h-40 overflow-y-auto pr-2"></div>
-            
-            <form action="https://formspree.io/f/mrerqqre" method="POST" class="space-y-3">
-                <input type="hidden" name="Order_Summary" id="hidden-cart-input">
-                <input type="text" name="Name" placeholder="Name" class="w-full bg-gray-50 border p-3 rounded-xl text-xs outline-none focus:border-main" required>
-                <input type="text" name="WhatsApp" placeholder="WhatsApp" class="w-full bg-gray-50 border p-3 rounded-xl text-xs outline-none focus:border-main" required>
-                <button type="submit" class="w-full bg-black text-white py-4 rounded-xl font-black uppercase text-[10px] shadow-xl">Confirm Order</button>
-            </form>
-        </div>
-    </div>
-
-    <footer class="bg-white border-t border-gray-100 py-6 mt-10 w-full">
-        <div class="max-w-6xl mx-auto px-4 flex flex-col items-center gap-2 text-gray-400 font-bold uppercase tracking-[0.1em] text-[9px]">
-            <div id="f-details-bottom" class="flex flex-wrap justify-center gap-4">
-                </div>
-            <p class="text-gray-200 mt-2">© 2026 NIMA HANDICRAFT</p>
-        </div>
+    <footer class="bg-white border-t py-6 text-center mt-auto">
+        <div id="f-details" class="flex flex-wrap justify-center gap-4 text-[9px] font-bold text-gray-400 uppercase tracking-tight"></div>
+        <p class="text-[8px] text-gray-200 mt-2 tracking-widest">© 2026 NIMA HANDICRAFT</p>
     </footer>
+
+    <div id="cart-modal" class="fixed inset-0 bg-black/80 hidden z-[200] flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl w-full max-w-xs p-6 shadow-2xl">
+            <h3 class="font-black uppercase text-sm mb-4">Your Order</h3>
+            <div id="cart-items" class="space-y-2 mb-4 max-h-32 overflow-y-auto"></div>
+            <form action="https://formspree.io/f/mrerqqre" method="POST" class="space-y-2">
+                <input type="hidden" name="Order" id="hidden-cart-input">
+                <input type="text" name="Name" placeholder="Name" class="w-full bg-gray-50 border p-3 rounded-lg text-xs outline-none" required>
+                <input type="text" name="WhatsApp" placeholder="WhatsApp" class="w-full bg-gray-50 border p-3 rounded-lg text-xs outline-none" required>
+                <button type="submit" class="w-full bg-black text-white py-3 rounded-lg font-black text-[10px] uppercase">Confirm Order</button>
+            </form>
+            <button onclick="toggleCart()" class="w-full mt-2 text-[9px] uppercase font-bold text-gray-400">Close</button>
+        </div>
+    </div>
+
+    <div id="floating-cart" class="fixed bottom-6 right-6 z-[100] cursor-pointer" onclick="toggleCart()">
+        <div class="bg-main p-4 rounded-full shadow-xl relative">
+            <i class="fas fa-shopping-bag text-white text-lg"></i>
+            <span id="cart-count" class="absolute -top-1 -right-1 bg-black text-white text-[9px] rounded-full h-5 w-5 flex items-center justify-center border-2 border-white">0</span>
+        </div>
+    </div>
 
     <script>
         let cart = [];
-
         async function loadWebsite() {
             try {
                 const sRes = await fetch('settings.json');
                 const settings = await sRes.json();
-                
                 if(settings.site_color) document.documentElement.style.setProperty('--main-color', settings.site_color);
-                document.getElementById('shop-name-display').innerText = settings.site_name || "Nima Handicraft";
-
-                const contactHTML = `
-                    <span><i class="fab fa-whatsapp text-green-500"></i> ${settings.whatsapp}</span>
+                
+                document.getElementById('f-details').innerHTML = `
+                    <span><i class="fab fa-whatsapp"></i> ${settings.whatsapp}</span>
                     <span><i class="far fa-envelope text-red-400"></i> ${settings.email}</span>
                     <span><i class="fas fa-map-marker-alt"></i> ${settings.address}</span>
                 `;
-                document.getElementById('f-details-bottom').innerHTML = contactHTML;
-                document.getElementById('f-details-top').innerHTML = contactHTML;
 
-                // Load all products (making 6 dummy items for testing the grid)
                 const pRes = await fetch('content/products/bag1.json');
                 const product = await pRes.json();
-
                 const pList = document.getElementById('product-list');
-                pList.innerHTML = ""; // Clear loader
+                pList.innerHTML = "";
 
-                // Displaying same product 6 times to show the 6-per-line grid
+                // सामान ६ वटा देखिने बनाउन (Loop for 6 items)
                 for(let i=0; i<6; i++) {
                     pList.innerHTML += `
-                        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden group hover:shadow-lg transition-all">
-                            <div class="h-40 overflow-hidden relative">
-                                <img src="${product.image1}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                                <div class="absolute bottom-2 left-2 bg-white/90 backdrop-blur px-2 py-0.5 rounded-full text-[7px] font-black uppercase">Premium</div>
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col h-full">
+                            <div class="h-32 md:h-40 overflow-hidden">
+                                <img src="${product.image1}" class="w-full h-full object-cover">
                             </div>
-                            <div class="p-3">
-                                <h2 class="text-[10px] font-black text-gray-800 leading-tight h-8 line-clamp-2">${product.title}</h2>
-                                <p class="text-main font-black text-xs mt-1">${product.price}</p>
-                                <button onclick="addToCart('${product.title}', '${product.price}', event)" 
-                                    class="mt-2 w-full bg-white border border-black py-1.5 rounded-lg uppercase text-[8px] font-black hover:bg-black hover:text-white transition-all active:scale-95">
+                            <div class="p-2 flex flex-col flex-grow">
+                                <h2 class="text-[9px] font-bold text-gray-800 leading-tight mb-1 h-6 overflow-hidden">${product.title}</h2>
+                                <p class="text-main font-black text-xs">${product.price}</p>
+                                <button onclick="addToCart('${product.title}', '${product.price}')" 
+                                    class="mt-auto w-full bg-black text-white py-1.5 rounded-md uppercase text-[8px] font-black tracking-tighter">
                                     Add
                                 </button>
                             </div>
                         </div>
                     `;
                 }
-            } catch (e) { 
-                console.error("Load error");
-            }
+            } catch (e) { console.error("Error loading files"); }
         }
 
-        function addToCart(name, price, event) {
+        function addToCart(name, price) {
             cart.push({name, price});
             document.getElementById('cart-count').innerText = cart.length;
-            event.target.innerText = "Added!";
-            setTimeout(() => event.target.innerText = "Add", 1500);
+            updateCartUI();
         }
 
         function updateCartUI() {
             const itemsDiv = document.getElementById('cart-items');
-            itemsDiv.innerHTML = cart.map(item => `
-                <div class="flex justify-between items-center bg-gray-50 p-2 rounded-lg text-[10px] font-bold">
-                    <span>${item.name}</span>
-                    <span class="text-main">${item.price}</span>
-                </div>
-            `).join('');
+            itemsDiv.innerHTML = cart.map(item => `<div class="flex justify-between text-[10px] bg-gray-50 p-2 rounded"><span>${item.name}</span><b>${item.price}</b></div>`).join('');
             document.getElementById('hidden-cart-input').value = JSON.stringify(cart);
         }
 
-        function toggleCart() { 
-            updateCartUI();
-            document.getElementById('cart-modal').classList.toggle('hidden'); 
-        }
-
+        function toggleCart() { document.getElementById('cart-modal').classList.toggle('hidden'); }
         loadWebsite();
     </script>
 </body>
