@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nima Master Cloud Admin</title>
+    <title>Nima Cloud Admin | Smart Login</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 min-h-screen pb-20">
@@ -11,66 +11,87 @@
     <div id="lock" class="fixed inset-0 bg-black z-[500] flex items-center justify-center p-6">
         <div class="bg-white p-8 rounded-3xl w-full max-w-sm shadow-2xl">
             <h2 class="font-black text-center uppercase mb-6 text-2xl tracking-tighter">Nima Login</h2>
-            <input type="password" id="admin-pass" placeholder="Admin Password" class="w-full border-2 p-4 rounded-xl mb-4 outline-none focus:border-red-500">
-            <input type="password" id="gh-token" placeholder="Paste GitHub Token Here" class="w-full border-2 p-4 rounded-xl mb-6 outline-none focus:border-red-500 text-xs">
-            <button onclick="login()" class="w-full bg-black text-white py-5 rounded-xl font-black uppercase tracking-widest active:scale-95 transition">Enter Dashboard</button>
+            <input type="password" id="admin-pass" placeholder="Admin Password" class="w-full border-2 p-4 rounded-xl mb-4 outline-none focus:border-red-500 text-center font-bold">
+            
+            <div id="token-box">
+                <input type="password" id="gh-token" placeholder="Paste GitHub Token (One time only)" class="w-full border-2 p-4 rounded-xl mb-6 outline-none focus:border-red-500 text-xs text-center">
+            </div>
+
+            <button onclick="login()" class="w-full bg-black text-white py-5 rounded-xl font-black uppercase tracking-widest active:scale-95 transition">Login</button>
+            <p id="status-msg" class="text-[10px] text-gray-400 mt-4 text-center italic"></p>
         </div>
     </div>
 
-    <div class="max-w-2xl mx-auto pt-10 px-4">
+    <div id="dashboard" class="max-w-2xl mx-auto pt-10 px-4 hidden">
         <div class="bg-white p-8 rounded-[40px] shadow-xl space-y-10">
             
+            <div class="flex justify-between items-center border-b pb-4">
+                <h2 class="font-black uppercase text-xl">Dashboard</h2>
+                <button onclick="logout()" class="text-[10px] bg-gray-100 px-3 py-1 rounded-full font-bold text-gray-500 hover:bg-red-50 hover:text-red-500">Logout & Clear Token</button>
+            </div>
+
             <section class="space-y-4">
-                <h3 class="font-black text-red-500 uppercase text-xs border-b pb-2">1. Shop Identity & Style</h3>
+                <h3 class="font-black text-red-500 uppercase text-xs">1. Shop Identity & Style</h3>
                 <input type="text" id="s-name" placeholder="New Shop Name" class="w-full border-2 p-4 rounded-2xl outline-none">
-                
                 <div class="flex gap-4">
                     <input type="text" id="s-color" placeholder="Brand Color (#hex)" class="flex-grow border-2 p-4 rounded-2xl outline-none">
                     <input type="color" id="color-picker" oninput="document.getElementById('s-color').value=this.value" class="h-14 w-14 rounded-2xl cursor-pointer border-none">
                 </div>
-
                 <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="text-[9px] font-bold text-gray-400 uppercase ml-2">Logo Filename</label>
-                        <input type="text" id="s-logo" placeholder="logo.jpg" class="w-full border-2 p-4 rounded-2xl outline-none">
-                    </div>
-                    <div>
-                        <label class="text-[9px] font-bold text-gray-400 uppercase ml-2">Cover Filename</label>
-                        <input type="text" id="s-cover" placeholder="cover.jpg" class="w-full border-2 p-4 rounded-2xl outline-none">
-                    </div>
+                    <input type="text" id="s-logo" placeholder="Logo filename" class="border-2 p-4 rounded-2xl">
+                    <input type="text" id="s-cover" placeholder="Cover filename" class="border-2 p-4 rounded-2xl">
                 </div>
-                
                 <button onclick="saveSettings()" id="btn-s" class="w-full bg-black text-white py-5 rounded-2xl font-black uppercase tracking-widest shadow-lg active:scale-95 transition">Update Website Now</button>
             </section>
 
             <hr class="border-gray-100">
 
             <section class="space-y-4">
-                <h3 class="font-black text-red-500 uppercase text-xs border-b pb-2">2. Add New Product</h3>
-                <input type="text" id="p-title" placeholder="Product Title (e.g. Silk Bag)" class="w-full border-2 p-4 rounded-2xl outline-none">
-                <input type="text" id="p-price" placeholder="Price (e.g. 150 AED)" class="w-full border-2 p-4 rounded-2xl outline-none">
-                <input type="text" id="p-img" placeholder="Image Name (e.g. bag5.jpg)" class="w-full border-2 p-4 rounded-2xl outline-none">
-                <textarea id="p-desc" placeholder="Brief Description..." class="w-full border-2 p-4 rounded-2xl outline-none h-24"></textarea>
-                
-                <button onclick="addProduct()" id="btn-p" class="w-full bg-red-600 text-white py-5 rounded-2xl font-black uppercase tracking-widest shadow-lg shadow-red-100 active:scale-95 transition">Upload to Live Store</button>
+                <h3 class="font-black text-red-500 uppercase text-xs">2. Add New Product</h3>
+                <input type="text" id="p-title" placeholder="Product Title" class="w-full border-2 p-4 rounded-2xl">
+                <input type="text" id="p-price" placeholder="Price (e.g. 150 AED)" class="w-full border-2 p-4 rounded-2xl">
+                <input type="text" id="p-img" placeholder="Image Name (e.g. bag5.jpg)" class="w-full border-2 p-4 rounded-2xl">
+                <button onclick="addProduct()" id="btn-p" class="w-full bg-red-600 text-white py-5 rounded-2xl font-black uppercase tracking-widest shadow-lg active:scale-95 transition">Upload to Live Store</button>
             </section>
-
         </div>
     </div>
 
     <script>
         let GITHUB_TOKEN = "";
-        // !!! CHANGE THE LINE BELOW TO YOUR REAL GITHUB INFO !!!
         const REPO = "nimahandicraft26/nimahandicraft"; 
+
+        // Page Load: Check if token exists in browser memory
+        window.onload = function() {
+            const savedToken = localStorage.getItem('nima_gh_token');
+            if(savedToken) {
+                document.getElementById('token-box').classList.add('hidden');
+                document.getElementById('status-msg').innerText = "Token loaded from memory ✔";
+            }
+        };
 
         function login() {
             const pass = document.getElementById('admin-pass').value;
-            GITHUB_TOKEN = document.getElementById('gh-token').value;
-            if(pass === "nima@2026" && GITHUB_TOKEN.startsWith("ghp_")) {
+            const inputToken = document.getElementById('gh-token').value;
+            const savedToken = localStorage.getItem('nima_gh_token');
+
+            GITHUB_TOKEN = savedToken || inputToken;
+
+            if(pass === "nima@2026" && GITHUB_TOKEN) {
+                // Save token for next time
+                localStorage.setItem('nima_gh_token', GITHUB_TOKEN);
                 document.getElementById('lock').classList.add('hidden');
-            } else { alert("Wrong Password or Invalid Token!"); }
+                document.getElementById('dashboard').classList.remove('hidden');
+            } else { 
+                alert("Incorrect Password or Missing Token!"); 
+            }
         }
 
+        function logout() {
+            localStorage.removeItem('nima_gh_token');
+            location.reload();
+        }
+
+        // --- GitHub API Functions (Same as before) ---
         async function saveToGitHub(path, content, sha = null) {
             const url = `https://api.github.com/repos/${REPO}/contents/${path}`;
             if (!sha) {
@@ -100,7 +121,7 @@
             if(success) {
                 btn.innerText = "Website Updated!";
                 setTimeout(() => btn.innerText = "Update Website Now", 2000);
-            } else { alert("Error saving settings. Check Repo Name and Token."); btn.innerText = "Error!"; }
+            } else { alert("Sync Error!"); btn.innerText = "Error!"; }
         }
 
         async function addProduct() {
@@ -108,14 +129,11 @@
             const title = document.getElementById('p-title').value;
             const price = document.getElementById('p-price').value;
             const img = document.getElementById('p-img').value;
-            const desc = document.getElementById('p-desc').value;
             const fileName = img.split('.')[0] + ".json";
 
-            // 1. Create individual product file
-            const pData = { title, price, image1: "images/"+img, description: desc };
+            const pData = { title, price, image1: "images/"+img, description: "" };
             await saveToGitHub(`content/products/${fileName}`, JSON.stringify(pData, null, 2));
 
-            // 2. Update list.json
             const lRes = await fetch(`https://api.github.com/repos/${REPO}/contents/content/products/list.json`, {
                 headers: { Authorization: `token ${GITHUB_TOKEN}` }
             });
@@ -124,12 +142,10 @@
             list.push({ file: fileName });
             
             const success = await saveToGitHub('content/products/list.json', JSON.stringify(list, null, 2), lData.sha);
-            
             if(success) {
                 btn.innerText = "Product is Live!";
-                document.getElementById('p-title').value = "";
                 setTimeout(() => btn.innerText = "Upload to Live Store", 2000);
-            } else { alert("Failed to update list.json"); btn.innerText = "Error!"; }
+            }
         }
     </script>
 </body>
