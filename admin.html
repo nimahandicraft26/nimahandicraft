@@ -57,96 +57,48 @@
     </div>
 
     <script>
-        let GITHUB_TOKEN = "";
-        const REPO = "nimahandicraft26/nimahandicraft"; 
+    let GITHUB_TOKEN = "";
+    // !!! SET YOUR CORRECT REPO NAME HERE !!!
+    const REPO = "nimahandicraft26/nimahandicraft"; 
 
-        // Page Load: Check if token exists in browser memory
-        window.onload = function() {
-            const savedToken = localStorage.getItem('nima_gh_token');
-            if(savedToken) {
-                document.getElementById('token-box').classList.add('hidden');
-                document.getElementById('status-msg').innerText = "Token loaded from memory ✔";
-            }
-        };
+    window.onload = function() {
+        // Checking if token is saved in browser memory
+        const savedToken = localStorage.getItem('nima_gh_token');
+        if(savedToken) {
+            document.getElementById('gh-token').value = savedToken;
+            document.getElementById('remember-check').checked = true;
+            console.log("Saved token found and loaded.");
+        }
+    };
 
-        function login() {
-            const pass = document.getElementById('admin-pass').value;
-            const inputToken = document.getElementById('gh-token').value;
-            const savedToken = localStorage.getItem('nima_gh_token');
+    function login() {
+        const passInput = document.getElementById('admin-pass').value;
+        const tokenInput = document.getElementById('gh-token').value;
+        const rememberMe = document.getElementById('remember-check').checked;
 
-            GITHUB_TOKEN = savedToken || inputToken;
+        // CHECK YOUR PASSWORD HERE:
+        if(passInput === "Nimahandicraft2026@*") {
+            // Check if Token starts with ghp_
+            if(tokenInput.startsWith("ghp_")) {
+                GITHUB_TOKEN = tokenInput;
+                
+                // If 'Remember Me' is checked, save it
+                if(rememberMe) {
+                    localStorage.setItem('nima_gh_token', GITHUB_TOKEN);
+                } else {
+                    localStorage.removeItem('nima_gh_token');
+                }
 
-            if(pass === "nima@2026" && GITHUB_TOKEN) {
-                // Save token for next time
-                localStorage.setItem('nima_gh_token', GITHUB_TOKEN);
+                // Open Dashboard
                 document.getElementById('lock').classList.add('hidden');
                 document.getElementById('dashboard').classList.remove('hidden');
-            } else { 
-                alert("Incorrect Password or Missing Token!"); 
+            } else {
+                alert("Invalid GitHub Token! It must start with 'ghp_'.");
             }
+        } else {
+            alert("Wrong Password! Please use the correct password to login.");
         }
-
-        function logout() {
-            localStorage.removeItem('nima_gh_token');
-            location.reload();
-        }
-
-        // --- GitHub API Functions (Same as before) ---
-        async function saveToGitHub(path, content, sha = null) {
-            const url = `https://api.github.com/repos/${REPO}/contents/${path}`;
-            if (!sha) {
-                const res = await fetch(url, { headers: { Authorization: `token ${GITHUB_TOKEN}` } });
-                if (res.ok) { const data = await res.json(); sha = data.sha; }
-            }
-            const response = await fetch(url, {
-                method: "PUT",
-                headers: { Authorization: `token ${GITHUB_TOKEN}`, "Content-Type": "application/json" },
-                body: JSON.stringify({ message: `Admin Update: ${path}`, content: btoa(unescape(encodeURIComponent(content))), sha: sha })
-            });
-            return response.ok;
-        }
-
-        async function saveSettings() {
-            const btn = document.getElementById('btn-s'); btn.innerText = "Processing...";
-            const data = {
-                site_name: document.getElementById('s-name').value,
-                site_color: document.getElementById('s-color').value,
-                logo: "images/" + document.getElementById('s-logo').value,
-                cover: "images/" + document.getElementById('s-cover').value,
-                whatsapp: "+971XXXXXXXXX", 
-                email: "info@nima.com",
-                address: "Dubai, UAE"
-            };
-            const success = await saveToGitHub('settings.json', JSON.stringify(data, null, 2));
-            if(success) {
-                btn.innerText = "Website Updated!";
-                setTimeout(() => btn.innerText = "Update Website Now", 2000);
-            } else { alert("Sync Error!"); btn.innerText = "Error!"; }
-        }
-
-        async function addProduct() {
-            const btn = document.getElementById('btn-p'); btn.innerText = "Uploading...";
-            const title = document.getElementById('p-title').value;
-            const price = document.getElementById('p-price').value;
-            const img = document.getElementById('p-img').value;
-            const fileName = img.split('.')[0] + ".json";
-
-            const pData = { title, price, image1: "images/"+img, description: "" };
-            await saveToGitHub(`content/products/${fileName}`, JSON.stringify(pData, null, 2));
-
-            const lRes = await fetch(`https://api.github.com/repos/${REPO}/contents/content/products/list.json`, {
-                headers: { Authorization: `token ${GITHUB_TOKEN}` }
-            });
-            const lData = await lRes.json();
-            const list = JSON.parse(atob(lData.content));
-            list.push({ file: fileName });
-            
-            const success = await saveToGitHub('content/products/list.json', JSON.stringify(list, null, 2), lData.sha);
-            if(success) {
-                btn.innerText = "Product is Live!";
-                setTimeout(() => btn.innerText = "Upload to Live Store", 2000);
-            }
-        }
-    </script>
+    }
+</script>
 </body>
 </html>
