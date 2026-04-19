@@ -1,5 +1,8 @@
 [
   {
     "file": "bag1.json"
+  },
+  {
+    "file": "keychain.json"
   }
 ]
