@@ -1,12 +1,10 @@
 {
   "site_name": "",
   "site_name_color": "",
-  "site_font": "'Times New Roman'",
-  "site_color": "#d41620",
-  "contact_color": "#d42316",
-  "logo": "images/",
-  "cover": "images/",
-  "whatsapp": "",
-  "email": "",
-  "address": ""
+  "site_font": "Arial",
+  "site_color": "#ffffff",
+  "contact_color": "",
+  "whatsapp": "+971508519937",
+  "email": "nima.handicraft26@gmail.com",
+  "address": "DEIRA,DUBAI"
 }
