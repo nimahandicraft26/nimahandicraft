@@ -25,14 +25,36 @@
         </div>
 
         <div class="bg-white p-8 rounded-[40px] shadow-xl space-y-6 border border-gray-200">
-            <h3 class="font-black text-gray-400 uppercase text-[10px] tracking-widest bg-gray-50 p-2 rounded">1. Identity & Contact Info</h3>
+            <h3 class="font-black text-gray-400 uppercase text-[10px] tracking-widest bg-gray-50 p-2 rounded">1. Identity & Style Settings</h3>
             
             <div class="space-y-4">
-                <input type="text" id="s-name" placeholder="Shop Name (e.g., Nima Handicraft)" class="w-full border-2 p-4 rounded-2xl outline-none">
+                <input type="text" id="s-name" placeholder="Shop Name" class="w-full border-2 p-4 rounded-2xl outline-none">
                 
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Name Text Color</label>
+                        <input type="text" id="s-name-color" placeholder="#FFFFFF" class="w-full border-2 p-4 rounded-2xl outline-none">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Select Font Style</label>
+                        <select id="s-font" class="w-full border-2 p-4 rounded-2xl outline-none bg-white">
+                            <option value="Arial">Arial (Clean)</option>
+                            <option value="'Times New Roman'">Serif (Classic)</option>
+                            <option value="Georgia">Georgia (Elegant)</option>
+                            <option value="Impact">Impact (Bold)</option>
+                            <option value="'Courier New'">Monospace</option>
+                        </select>
+                    </div>
+                </div>
+
                 <div class="flex gap-4">
-                    <input type="text" id="s-color" placeholder="Brand Color Hex (#000000)" class="flex-grow border-2 p-4 rounded-2xl outline-none">
-                    <input type="color" id="color-picker" oninput="document.getElementById('s-color').value=this.value" class="h-14 w-14 rounded-2xl cursor-pointer border-none shadow-sm">
+                    <div class="flex-grow">
+                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Website Theme Color</label>
+                        <input type="text" id="s-color" placeholder="Brand Color Hex (#000000)" class="w-full border-2 p-4 rounded-2xl outline-none">
+                    </div>
+                    <div class="pt-5">
+                        <input type="color" id="color-picker" oninput="document.getElementById('s-color').value=this.value" class="h-14 w-14 rounded-2xl cursor-pointer border-none shadow-sm">
+                    </div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
@@ -41,11 +63,13 @@
                 </div>
 
                 <hr class="opacity-50">
-                <p class="text-[10px] font-bold text-gray-400 uppercase ml-1">Contact Details</p>
+                <p class="text-[10px] font-bold text-gray-400 uppercase ml-1">Contact Details & Color</p>
                 
-                <input type="text" id="s-whatsapp" placeholder="WhatsApp (e.g., +971501234567)" class="w-full border-2 p-4 rounded-2xl outline-none">
+                <input type="text" id="s-contact-color" placeholder="Contact Text Color (e.g., #FFFFFF)" class="w-full border-2 p-4 rounded-2xl outline-none">
+                
+                <input type="text" id="s-whatsapp" placeholder="WhatsApp Number" class="w-full border-2 p-4 rounded-2xl outline-none">
                 <input type="email" id="s-email" placeholder="Gmail Address" class="w-full border-2 p-4 rounded-2xl outline-none">
-                <input type="text" id="s-loc" placeholder="Location (e.g., Dubai, UAE)" class="w-full border-2 p-4 rounded-2xl outline-none">
+                <input type="text" id="s-loc" placeholder="Location (City, Country)" class="w-full border-2 p-4 rounded-2xl outline-none">
             </div>
 
             <button onclick="saveSettings()" id="btn-s" class="w-full bg-black text-white py-5 rounded-2xl font-black uppercase tracking-widest shadow-lg active:scale-95 transition">Update Website Info</button>
@@ -118,7 +142,10 @@
             const btn = document.getElementById('btn-s'); btn.innerText = "Saving...";
             const data = {
                 site_name: document.getElementById('s-name').value,
+                site_name_color: document.getElementById('s-name-color').value,
+                site_font: document.getElementById('s-font').value,
                 site_color: document.getElementById('s-color').value,
+                contact_color: document.getElementById('s-contact-color').value,
                 logo: "images/" + document.getElementById('s-logo').value,
                 cover: "images/" + document.getElementById('s-cover').value,
                 whatsapp: document.getElementById('s-whatsapp').value,
@@ -137,10 +164,8 @@
             const img = document.getElementById('p-img').value;
             const desc = document.getElementById('p-desc').value;
             const file = img.split('.')[0] + ".json";
-
             const pData = { title, price, image1: "images/"+img, description: desc };
             await pushToGitHub(`content/products/${file}`, JSON.stringify(pData, null, 2));
-
             const lRes = await fetch(`https://api.github.com/repos/${REPO}/contents/content/products/list.json`, {
                 headers: { Authorization: `token ${GITHUB_TOKEN}` }
             });
