@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --main-color: #ea4747; }
-        body { font-family: 'Inter', sans-serif; }
+        body { font-family: 'Inter', sans-serif; transition: background 0.3s; }
         .bg-main { background-color: var(--main-color); }
         .text-main { color: var(--main-color); }
     </style>
@@ -16,12 +16,12 @@
 <body class="bg-gray-50 flex flex-col min-h-screen">
 
     <header class="relative w-full h-32 md:h-44 flex flex-col items-center justify-center text-center overflow-hidden">
-        <img src="images/cover.jpeg" class="absolute inset-0 w-full h-full object-cover opacity-90" alt="Store Cover">
+        <img id="site-cover" src="images/cover.jpeg" class="absolute inset-0 w-full h-full object-cover opacity-90" alt="Store Cover">
         <div class="relative z-10">
             <div class="bg-white p-1 rounded-full shadow-lg inline-block mb-1">
-                <img src="images/logo.jpeg" class="h-10 md:h-14 w-10 md:w-14 rounded-full object-cover">
+                <img id="site-logo" src="images/logo.jpeg" class="h-10 md:h-14 w-10 md:w-14 rounded-full object-cover">
             </div>
-            <h1 class="text-white text-lg md:text-2xl font-black uppercase tracking-widest drop-shadow-md">Nima Handicraft</h1>
+            <h1 id="shop-name-display" class="text-white text-lg md:text-2xl font-black uppercase tracking-widest drop-shadow-md">Nima Handicraft</h1>
             <p class="text-white text-[8px] md:text-[10px] uppercase tracking-[0.3em] font-bold opacity-80">Premium Collection</p>
         </div>
     </header>
@@ -71,15 +71,25 @@
             try {
                 const settingsRes = await fetch('settings.json');
                 const settings = await settingsRes.json();
+                
+                // 1. APPLY DYNAMIC COLORS & FONTS
                 if(settings.site_color) document.documentElement.style.setProperty('--main-color', settings.site_color);
                 
-                document.getElementById('f-details').innerHTML = `
+                const shopHeader = document.getElementById('shop-name-display');
+                if(settings.site_name) shopHeader.innerText = settings.site_name;
+                if(settings.site_name_color) shopHeader.style.color = settings.site_name_color;
+                if(settings.site_font) shopHeader.style.fontFamily = settings.site_font;
+
+                const footDetails = document.getElementById('f-details');
+                footDetails.innerHTML = `
                     <span><i class="fab fa-whatsapp"></i> ${settings.whatsapp}</span>
                     <span><i class="far fa-envelope"></i> ${settings.email}</span>
                     <span><i class="fas fa-map-marker-alt"></i> ${settings.address}</span>
                 `;
+                // Apply Contact Text Color
+                if(settings.contact_color) footDetails.style.color = settings.contact_color;
 
-                // Load items listed in list.json
+                // 2. LOAD PRODUCTS
                 const listRes = await fetch('content/products/list.json');
                 const productList = await listRes.json();
                 const pGrid = document.getElementById('product-list');
@@ -97,15 +107,20 @@
                                 <div class="p-3 flex flex-col flex-grow">
                                     <h2 class="text-[10px] font-black text-gray-800 leading-tight h-8 overflow-hidden">${p.title}</h2>
                                     <p class="text-main font-black text-xs mt-1">${p.price}</p>
+                                    
+                                    <p class="text-[9px] text-gray-500 mt-2 line-clamp-2 leading-tight flex-grow">
+                                        ${p.description || ''}
+                                    </p>
+
                                     <button onclick="addToCart('${p.title}', '${p.price}', event)" 
-                                        class="mt-auto w-full bg-black text-white py-2 rounded-lg uppercase text-[8px] font-black tracking-tighter active:scale-95 transition">
+                                        class="mt-3 w-full bg-black text-white py-2 rounded-lg uppercase text-[8px] font-black tracking-tighter active:scale-95 transition">
                                         Add to Cart
                                     </button>
                                 </div>
                             </div>`;
-                    } catch (e) { console.error("Missing file:", item.file); }
+                    } catch (e) { console.error("Missing product data:", item.file); }
                 }
-            } catch (e) { console.error("System Error"); }
+            } catch (e) { console.error("Settings error:", e); }
         }
 
         function addToCart(name, price, event) {
