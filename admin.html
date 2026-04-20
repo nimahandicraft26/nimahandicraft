@@ -11,9 +11,9 @@
     <div id="lock" class="fixed inset-0 bg-black z-[500] flex items-center justify-center p-6">
         <div class="bg-white p-8 rounded-3xl w-full max-w-sm shadow-2xl text-center border-t-8 border-blue-600">
             <h2 class="font-black uppercase mb-6 text-2xl tracking-tighter text-gray-800">Admin Access</h2>
-            <input type="password" id="admin-pass" placeholder="Password" class="w-full border-2 p-4 rounded-xl mb-4 text-center font-bold outline-none focus:border-blue-500">
-            <input type="password" id="gh-token" placeholder="GitHub Token" class="w-full border-2 p-4 rounded-xl mb-6 text-xs text-center outline-none focus:border-blue-500">
+            <input type="password" id="admin-pass" placeholder="Enter Admin Password" class="w-full border-2 p-4 rounded-xl mb-4 text-center font-bold outline-none focus:border-blue-500">
             <button onclick="login()" id="login-btn" class="w-full bg-blue-600 text-white py-5 rounded-xl font-black uppercase tracking-widest active:scale-95 transition">Enter Manager</button>
+            <p class="text-[9px] mt-4 text-gray-400">System will use saved GitHub credentials</p>
         </div>
     </div>
 
@@ -32,44 +32,42 @@
                 
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Name Text Color</label>
-                        <input type="text" id="s-name-color" placeholder="#FFFFFF" class="w-full border-2 p-4 rounded-2xl outline-none">
+                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Name Color</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="s-name-color" placeholder="#FFFFFF" class="w-full border-2 p-2 rounded-xl text-xs outline-none">
+                            <input type="color" oninput="document.getElementById('s-name-color').value=this.value" class="h-10 w-12 rounded-lg cursor-pointer border-none shadow-sm">
+                        </div>
                     </div>
                     <div>
-                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Select Font Style</label>
-                        <select id="s-font" class="w-full border-2 p-4 rounded-2xl outline-none bg-white">
-                            <option value="Arial">Arial (Clean)</option>
-                            <option value="'Times New Roman'">Serif (Classic)</option>
-                            <option value="Georgia">Georgia (Elegant)</option>
-                            <option value="Impact">Impact (Bold)</option>
-                            <option value="'Courier New'">Monospace</option>
+                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Select Font</label>
+                        <select id="s-font" class="w-full border-2 p-2 rounded-xl text-xs outline-none bg-white h-[42px]">
+                            <option value="Arial">Arial</option>
+                            <option value="'Times New Roman'">Serif</option>
+                            <option value="Georgia">Georgia</option>
+                            <option value="Impact">Impact</option>
                         </select>
                     </div>
                 </div>
 
-                <div class="flex gap-4">
-                    <div class="flex-grow">
-                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Website Theme Color</label>
-                        <input type="text" id="s-color" placeholder="Brand Color Hex (#000000)" class="w-full border-2 p-4 rounded-2xl outline-none">
+                <div>
+                    <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Website Background</label>
+                    <div class="flex gap-4">
+                        <input type="text" id="s-color" placeholder="Background Hex" class="flex-grow border-2 p-4 rounded-2xl outline-none">
+                        <input type="color" oninput="document.getElementById('s-color').value=this.value" class="h-14 w-14 rounded-2xl cursor-pointer border-none shadow-sm">
                     </div>
-                    <div class="pt-5">
-                        <input type="color" id="color-picker" oninput="document.getElementById('s-color').value=this.value" class="h-14 w-14 rounded-2xl cursor-pointer border-none shadow-sm">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-4">
-                    <input type="text" id="s-logo" placeholder="Logo File (logo.png)" class="border-2 p-4 rounded-2xl outline-none">
-                    <input type="text" id="s-cover" placeholder="Cover File (cover.jpg)" class="border-2 p-4 rounded-2xl outline-none">
                 </div>
 
                 <hr class="opacity-50">
-                <p class="text-[10px] font-bold text-gray-400 uppercase ml-1">Contact Details & Color</p>
                 
-                <input type="text" id="s-contact-color" placeholder="Contact Text Color (e.g., #FFFFFF)" class="w-full border-2 p-4 rounded-2xl outline-none">
+                <p class="text-[10px] font-bold text-gray-400 uppercase ml-1">Contacts Color (Gmail/WhatsApp)</p>
+                <div class="flex gap-4">
+                    <input type="text" id="s-contact-color" placeholder="Contact Color Hex" class="flex-grow border-2 p-4 rounded-2xl outline-none">
+                    <input type="color" oninput="document.getElementById('s-contact-color').value=this.value" class="h-14 w-14 rounded-2xl cursor-pointer border-none shadow-sm">
+                </div>
                 
                 <input type="text" id="s-whatsapp" placeholder="WhatsApp Number" class="w-full border-2 p-4 rounded-2xl outline-none">
                 <input type="email" id="s-email" placeholder="Gmail Address" class="w-full border-2 p-4 rounded-2xl outline-none">
-                <input type="text" id="s-loc" placeholder="Location (City, Country)" class="w-full border-2 p-4 rounded-2xl outline-none">
+                <input type="text" id="s-loc" placeholder="Location" class="w-full border-2 p-4 rounded-2xl outline-none">
             </div>
 
             <button onclick="saveSettings()" id="btn-s" class="w-full bg-black text-white py-5 rounded-2xl font-black uppercase tracking-widest shadow-lg active:scale-95 transition">Update Website Info</button>
@@ -78,48 +76,39 @@
         <div class="bg-white p-8 rounded-[40px] shadow-xl space-y-6 border border-gray-200">
             <h3 class="font-black text-gray-400 uppercase text-[10px] tracking-widest bg-gray-50 p-2 rounded">2. Add New Product</h3>
             <input type="text" id="p-title" placeholder="Product Title" class="w-full border-2 p-4 rounded-2xl outline-none">
-            <input type="text" id="p-price" placeholder="Price (e.g., 150 AED)" class="w-full border-2 p-4 rounded-2xl outline-none">
-            <input type="text" id="p-img" placeholder="Image Filename (e.g., bag1.jpg)" class="w-full border-2 p-4 rounded-2xl outline-none">
+            <input type="text" id="p-price" placeholder="Price" class="w-full border-2 p-4 rounded-2xl outline-none">
+            <input type="text" id="p-img" placeholder="Image Filename (bag1.jpg)" class="w-full border-2 p-4 rounded-2xl outline-none">
             <textarea id="p-desc" placeholder="Product Description..." rows="3" class="w-full border-2 p-4 rounded-2xl outline-none"></textarea>
             <button onclick="addProduct()" id="btn-p" class="w-full bg-blue-600 text-white py-5 rounded-2xl font-black uppercase tracking-widest shadow-lg active:scale-95 transition">Upload to Store</button>
-        </div>
-
-        <div class="bg-white p-8 rounded-[40px] shadow-xl space-y-4 border border-red-100">
-            <h3 class="font-black text-red-400 uppercase text-[10px] tracking-widest bg-red-50 p-2 rounded">3. Delete a Product</h3>
-            <div class="flex gap-2">
-                <input type="text" id="del-filename" placeholder="filename.json" class="flex-grow border-2 p-4 rounded-2xl outline-none border-red-50">
-                <button onclick="deleteProduct()" id="btn-del" class="bg-red-600 text-white px-8 rounded-2xl font-bold uppercase text-xs active:scale-95 transition">Delete</button>
-            </div>
         </div>
     </div>
 
     <script>
-        let GITHUB_TOKEN = "";
+        // NOTE: Put your GitHub Token here once, and it will stay hidden from the screen!
+        let GITHUB_TOKEN = "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"; 
         const REPO = "nimahandicraft26/nimahandicraft"; 
 
         async function login() {
             const pass = document.getElementById('admin-pass').value;
-            const token = document.getElementById('gh-token').value;
             const btn = document.getElementById('login-btn');
+            
             if(pass !== "nima@2026") { alert("Wrong Password!"); return; }
+            
             btn.innerText = "Connecting...";
-            GITHUB_TOKEN = token;
+            
             try {
                 const res = await fetch(`https://api.github.com/repos/${REPO}`, {
                     headers: { 'Authorization': `token ${GITHUB_TOKEN}` }
                 });
                 if(res.ok) {
-                    localStorage.setItem('nima_gh_token', GITHUB_TOKEN);
                     document.getElementById('lock').classList.add('hidden');
                     document.getElementById('dashboard').classList.remove('hidden');
-                } else { alert("GitHub Auth Failed!"); btn.innerText = "Login"; }
+                } else { 
+                    alert("GitHub Auth Failed! Please check your token in the code."); 
+                    btn.innerText = "Enter Manager"; 
+                }
             } catch (e) { alert("Network Error"); }
         }
-
-        window.onload = function() {
-            const saved = localStorage.getItem('nima_gh_token');
-            if(saved) document.getElementById('gh-token').value = saved;
-        };
 
         async function pushToGitHub(path, content, sha = null, method = "PUT") {
             const url = `https://api.github.com/repos/${REPO}/contents/${path}`;
@@ -146,8 +135,6 @@
                 site_font: document.getElementById('s-font').value,
                 site_color: document.getElementById('s-color').value,
                 contact_color: document.getElementById('s-contact-color').value,
-                logo: "images/" + document.getElementById('s-logo').value,
-                cover: "images/" + document.getElementById('s-cover').value,
                 whatsapp: document.getElementById('s-whatsapp').value,
                 email: document.getElementById('s-email').value,
                 address: document.getElementById('s-loc').value
@@ -164,8 +151,10 @@
             const img = document.getElementById('p-img').value;
             const desc = document.getElementById('p-desc').value;
             const file = img.split('.')[0] + ".json";
+
             const pData = { title, price, image1: "images/"+img, description: desc };
             await pushToGitHub(`content/products/${file}`, JSON.stringify(pData, null, 2));
+
             const lRes = await fetch(`https://api.github.com/repos/${REPO}/contents/content/products/list.json`, {
                 headers: { Authorization: `token ${GITHUB_TOKEN}` }
             });
@@ -176,29 +165,6 @@
                 await pushToGitHub('content/products/list.json', JSON.stringify(list, null, 2), lData.sha);
             }
             btn.innerText = "Done!"; setTimeout(() => btn.innerText = "Upload to Store", 2000);
-        }
-
-        async function deleteProduct() {
-            const btn = document.getElementById('btn-del');
-            const file = document.getElementById('del-filename').value;
-            if(!file.endsWith('.json')) { alert("Enter filename like 'bag1.json'"); return; }
-            if(!confirm("Delete " + file + "?")) return;
-            btn.innerText = "Wait...";
-            const res = await fetch(`https://api.github.com/repos/${REPO}/contents/content/products/${file}`, {
-                headers: { Authorization: `token ${GITHUB_TOKEN}` }
-            });
-            if(res.ok) {
-                const data = await res.json();
-                await pushToGitHub(`content/products/${file}`, null, data.sha, "DELETE");
-            }
-            const lRes = await fetch(`https://api.github.com/repos/${REPO}/contents/content/products/list.json`, {
-                headers: { Authorization: `token ${GITHUB_TOKEN}` }
-            });
-            const lData = await lRes.json();
-            let list = JSON.parse(atob(lData.content));
-            list = list.filter(item => item.file !== file);
-            await pushToGitHub('content/products/list.json', JSON.stringify(list, null, 2), lData.sha);
-            btn.innerText = "Deleted!"; setTimeout(() => btn.innerText = "Delete", 2000);
         }
     </script>
 </body>
