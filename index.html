@@ -7,10 +7,11 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --main-color: #ea4747; }
-        body { font-family: 'Inter', sans-serif; transition: background 0.3s; }
-        .bg-main { background-color: var(--main-color); }
-        .text-main { color: var(--main-color); }
+        /* Default Brand Color for Cart and Price Tags */
+        :root { --brand-red: #ea4747; }
+        body { font-family: 'Inter', sans-serif; transition: background 0.4s ease; }
+        .bg-main { background-color: var(--brand-red); }
+        .text-main { color: var(--brand-red); }
     </style>
 </head>
 <body class="bg-gray-50 flex flex-col min-h-screen">
@@ -27,7 +28,7 @@
     </header>
 
     <main class="flex-grow max-w-[1600px] mx-auto py-6 px-4 w-full">
-        <div class="border-b border-gray-200 mb-6 pb-2 flex justify-between items-center">
+        <div class="border-b border-gray-200 mb-6 pb-2">
             <h2 class="text-[10px] font-black uppercase tracking-[0.3em] text-gray-400">Our Collection</h2>
         </div>
 
@@ -36,9 +37,9 @@
         </div>
     </main>
 
-    <footer class="bg-white border-t py-8 mt-auto">
-        <div id="f-details" class="flex flex-wrap justify-center gap-6 text-[9px] font-bold text-gray-400 uppercase tracking-tight"></div>
-        <p class="text-[8px] text-gray-200 mt-4 tracking-widest text-center">© 2026 NIMA HANDICRAFT | DUBAI, UAE</p>
+    <footer class="bg-white/80 border-t py-8 mt-auto backdrop-blur-sm">
+        <div id="f-details" class="flex flex-wrap justify-center gap-6 text-[9px] font-bold uppercase tracking-tight"></div>
+        <p class="text-[8px] text-gray-400 mt-4 tracking-widest text-center uppercase">© 2026 NIMA HANDICRAFT | DUBAI, UAE</p>
     </footer>
 
     <div id="floating-cart" class="fixed bottom-6 right-6 z-[100] cursor-pointer" onclick="toggleCart()">
@@ -59,7 +60,7 @@
                 <input type="hidden" name="Order_Summary" id="hidden-cart-input">
                 <input type="text" name="Name" placeholder="Full Name" class="w-full bg-gray-50 border p-3 rounded-xl text-xs outline-none" required>
                 <input type="text" name="WhatsApp" placeholder="WhatsApp Number" class="w-full bg-gray-50 border p-3 rounded-xl text-xs outline-none" required>
-                <button type="submit" class="w-full bg-black text-white py-4 rounded-xl font-black text-[10px] uppercase tracking-widest">Confirm via Gmail</button>
+                <button type="submit" class="w-full bg-black text-white py-4 rounded-xl font-black text-[10px] uppercase tracking-widest">Confirm Order</button>
             </form>
         </div>
     </div>
@@ -72,24 +73,32 @@
                 const settingsRes = await fetch('settings.json');
                 const settings = await settingsRes.json();
                 
-                // 1. APPLY DYNAMIC COLORS & FONTS
-                if(settings.site_color) document.documentElement.style.setProperty('--main-color', settings.site_color);
-                
+                // --- 1. CHANGE WEBSITE BACKGROUND ---
+                if(settings.site_color) {
+                    document.body.style.backgroundColor = settings.site_color;
+                }
+
+                // --- 2. CHANGE SHOP NAME & FONT ---
                 const shopHeader = document.getElementById('shop-name-display');
                 if(settings.site_name) shopHeader.innerText = settings.site_name;
                 if(settings.site_name_color) shopHeader.style.color = settings.site_name_color;
                 if(settings.site_font) shopHeader.style.fontFamily = settings.site_font;
 
+                // --- 3. CHANGE CONTACTS (TEXT & ICONS) ---
                 const footDetails = document.getElementById('f-details');
                 footDetails.innerHTML = `
                     <span><i class="fab fa-whatsapp"></i> ${settings.whatsapp}</span>
                     <span><i class="far fa-envelope"></i> ${settings.email}</span>
                     <span><i class="fas fa-map-marker-alt"></i> ${settings.address}</span>
                 `;
-                // Apply Contact Text Color
-                if(settings.contact_color) footDetails.style.color = settings.contact_color;
+                
+                if(settings.contact_color) {
+                    footDetails.style.color = settings.contact_color;
+                    // Force icons to match text color
+                    footDetails.querySelectorAll('i').forEach(icon => icon.style.color = settings.contact_color);
+                }
 
-                // 2. LOAD PRODUCTS
+                // --- 4. LOAD PRODUCTS WITH DESCRIPTIONS ---
                 const listRes = await fetch('content/products/list.json');
                 const productList = await listRes.json();
                 const pGrid = document.getElementById('product-list');
@@ -108,7 +117,7 @@
                                     <h2 class="text-[10px] font-black text-gray-800 leading-tight h-8 overflow-hidden">${p.title}</h2>
                                     <p class="text-main font-black text-xs mt-1">${p.price}</p>
                                     
-                                    <p class="text-[9px] text-gray-500 mt-2 line-clamp-2 leading-tight flex-grow">
+                                    <p class="text-[9px] text-gray-500 mt-2 line-clamp-2 leading-tight flex-grow italic">
                                         ${p.description || ''}
                                     </p>
 
@@ -118,9 +127,9 @@
                                     </button>
                                 </div>
                             </div>`;
-                    } catch (e) { console.error("Missing product data:", item.file); }
+                    } catch (e) { console.error("Error loading product:", item.file); }
                 }
-            } catch (e) { console.error("Settings error:", e); }
+            } catch (e) { console.error("Settings load failed"); }
         }
 
         function addToCart(name, price, event) {
@@ -132,7 +141,10 @@
 
         function updateCartUI() {
             const itemsDiv = document.getElementById('cart-items');
-            itemsDiv.innerHTML = cart.map(item => `<div class="flex justify-between text-[10px] bg-gray-50 p-2 rounded"><span>${item.name}</span><b>${item.price}</b></div>`).join('');
+            itemsDiv.innerHTML = cart.map(item => `
+                <div class="flex justify-between text-[10px] bg-gray-50 p-2 rounded">
+                    <span>${item.name}</span><b>${item.price}</b>
+                </div>`).join('');
             document.getElementById('hidden-cart-input').value = JSON.stringify(cart);
         }
 
